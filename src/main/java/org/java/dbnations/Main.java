@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
@@ -11,7 +12,6 @@ public class Main {
 		final String url = "jdbc:mysql://localhost:3306/db_nations";
 		final String user = "root";
 		final String password = "root";
-
 		try (Connection con = DriverManager.getConnection(url, user, password)) {
 
 			readAllPassagerTable(con);
@@ -27,6 +27,10 @@ public class Main {
 				+ " ORDER BY c.name; ";
 
 		try {
+			Scanner input = new Scanner(System.in);
+			System.out.println("scegli un filtro");
+			String filtro = input.nextLine();
+
 			PreparedStatement ps = con.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 
@@ -36,10 +40,18 @@ public class Main {
 				int idNazione = rs.getInt(2);
 				String nomeRegione = rs.getString(3);
 				String nomeNazione2 = rs.getString(4);
-
-				System.out.println(nomeNazione + "-" + idNazione + "-" + nomeRegione + "-" + nomeNazione2);
-				System.out.println("\n------------------------------\n");
+				
+				
+				 String riga = nomeNazione + "-" + idNazione + "-" + nomeRegione + "-" + nomeNazione2;
+				
+				
+				if(riga.toLowerCase().contains(filtro.toLowerCase())) {
+					System.out.println(riga);
+					System.out.println("\n------------------------------\n");
+				}
 			}
+			input.close();
+
 		} catch (Exception e) {
 
 			System.out.println(e.getMessage());
